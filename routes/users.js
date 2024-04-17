@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+const UserController = require('../controllers/userController');
+const userValidate = require('../middlewares/userValidate');
+const tokenValidate = require('../middlewares/tokenValidate');
+
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -11,13 +15,23 @@ const storage = multer.diskStorage({
        // console.log('file', file);
         cb(null, Date.now() + '-' + file.originalname)
     }
-  })
-   
+  })   
   const upload = multer({ storage: storage })  
 
-  const UserController = require('../controllers/userController');
-  const userValidate = require('../middlewares/userValidate');
+  router.post('/login',
+    userValidate.ValidarDatos, 
+    userValidate.ValidarUserName , 
+    UserController.login);//usuardo login
 
-  router.post('/login', userValidate.ValidarDatos, userValidate.ValidarUserName , UserController.login);//usuardo login
+    router.post('/register',    
+    UserController.register);
+
+    router.post('/registerapp',
+    userValidate.ValidarRegister,
+    UserController.register);
+
+  router.get('/token', 
+  tokenValidate.VerificarJwt, 
+    UserController.BuscarUser);//usando token
 
 module.exports = router;

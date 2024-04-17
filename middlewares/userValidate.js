@@ -34,7 +34,34 @@ userValidate.ValidarUserName = async(req, res, next) =>{
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
+    
+    
 }
 //----------------------------------------------------------------
+userValidate.ValidarRegister = async(req, res, next) =>{
+    try {
+        const {usuario} = req.body;
+        //console.log(usuario);
+        //Valida que el usuario no se en la tabla usuario
+        req.getConnection((erorSlq, conm)=>{
+            conm.query ('select * from usuarios where usuario=?',[usuario],(err, user)=>{
+                if(err){
+                    //en caso que exista un error va a mandar al navegador
+                        res.json(err);
+                        res.json ("ERROR EN SQL"); 
+                }
+                //Valida si encuentra el usuario
+                //console.log(user[0])
+                if(user[0]){                         
+                    res.status(400).json({ message: "El Correo Electronico ingresado se encuentra registrado, favor de verificar!!!", tipoerror: "Registrado" });
+                }else{
+                    next();
+                }
+            });
+        });      
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = userValidate;
