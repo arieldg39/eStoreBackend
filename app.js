@@ -10,7 +10,14 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 //cors
-app.use(cors());
+var corsOptions = {
+  origin: '*', // Permite todas las solicitudes desde cualquier origen
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+  optionsSuccessStatus: 200 // Devuelve 200 para todas las solicitudes OPTIONS
+};
+
+app.use(cors(corsOptions));
 app.options("*",cors()) 
 
 //Configuracion Conexion MySql

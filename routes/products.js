@@ -17,6 +17,9 @@ const productsController = require('../controllers/productsController');
 
 router.get("/all", productsController.productsGetAll);
 router.get("/list", productsController.productsList);
+router.post('/search', productsController.productsSearchDescribe);
+router.get('/:id', productsController.getProductById);
+router.delete('/:id', productsController.deleteProductById);
 
 module.exports = router;
 
